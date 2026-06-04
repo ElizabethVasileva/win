@@ -1,0 +1,2945 @@
+PYTHON 3.12
+DROP DATABASE IF EXISTS shop_shoes;
+CREATE DATABASE shop_shoes;
+USE shop_shoes;
+
+-- город
+CREATE TABLE city (
+    id INT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO city (id, name) VALUES (1, 'г. Лесной');
+
+-- улица
+CREATE TABLE streets (
+    id INT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO streets (id, name) VALUES
+(1, 'ул. 8 Марта'),
+(2, 'ул. Вишневая'),
+(3, 'ул. Гоголя'),
+(4, 'ул. Дзержинского'),
+(5, 'ул. Зеленая'),
+(6, 'ул. Клубная'),
+(7, 'ул. Коммунистическая'),
+(8, 'ул. Комсомольская'),
+(9, 'ул. Маяковского'),
+(10, 'ул. Мичурина'),
+(11, 'ул. Молодежная'),
+(12, 'ул. Набережная'),
+(13, 'ул. Некрасова'),
+(14, 'ул. Новая'),
+(15, 'ул. Октябрьская'),
+(16, 'ул. Партизанская'),
+(17, 'ул. Победы'),
+(18, 'ул. Подгорная'),
+(19, 'ул. Полевая'),
+(20, 'ул. Садовая'),
+(21, 'ул. Светлая'),
+(22, 'ул. Северная'),
+(23, 'ул. Солнечная'),
+(24, 'ул. Спортивная'),
+(25, 'ул. Фрунзе'),
+(26, 'ул. Цветочная'),
+(27, 'ул. Чехова'),
+(28, 'ул. Школьная'),
+(29, 'ул. Шоссейная'),
+(30, 'ул. Степная');
+
+-- роли
+CREATE TABLE roles (
+    id INT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO roles (id, name) VALUES
+(1, 'Администратор'),
+(2, 'Менеджер'),
+(3, 'Авторизированный клиент');
+
+-- пользователи
+CREATE TABLE users (
+    id INT NOT NULL PRIMARY KEY,
+    login TEXT NOT NULL,
+    password TEXT NOT NULL,
+    surname TEXT NOT NULL,
+    name TEXT NOT NULL,
+    patronymic TEXT,
+    role_id INT,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO users (id, login, password, surname, name, patronymic, role_id) VALUES
+(1, '94d5ous@gmail.com', 'uzWC67', 'Никифорова', 'Весения', 'Николаевна', 1),
+(2, 'uth4iz@mail.com', '2L6KZG', 'Сазонов', 'Руслан', 'Германович', 1),
+(3, 'yzls62@outlook.com', 'JlFRCZ', 'Одинцов', 'Серафим', 'Артёмович', 1),
+(4, '1diph5e@tutanota.com', '8ntwUp', 'Степанов', 'Михаил', 'Артёмович', 2),
+(5, 'tjde7c@yahoo.com', 'YOyhfR', 'Ворсин', 'Петр', 'Евгеньевич', 2),
+(6, 'wpmrc3do@tutanota.com', 'RSbvHv', 'Старикова', 'Елена', 'Павловна', 2),
+(7, '5d4zbu@tutanota.com', 'rwVDh9', 'Михайлюк', 'Анна', 'Вячеславовна', 3),
+(8, 'ptec8ym@yahoo.com', 'LdNyos', 'Ситдикова', 'Елена', 'Анатольевна', 3),
+(9, '1qz4kw@mail.com', 'gynQMT', 'Ворсин', 'Петр', 'Евгеньевич', 3),
+(10, '4np6se@mail.com', 'AtnDjr', 'Старикова', 'Елена', 'Павловна', 3);
+
+-- поставщики
+CREATE TABLE suppliers (
+    id INT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO suppliers (id, name) VALUES
+(1, 'Kari'),
+(2, 'Обувь для вас');
+
+-- производители
+CREATE TABLE manufacturers (
+    id INT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO manufacturers (id, name) VALUES
+(1, 'Kari'),
+(2, 'Marco Tozzi'),
+(3, 'Рос'),
+(4, 'Rieker'),
+(5, 'Alessio Nesca'),
+(6, 'CROSBY');
+
+-- категории товаров
+CREATE TABLE product_categories (
+    id INT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO product_categories (id, name) VALUES
+(1, 'Женская обувь'),
+(2, 'Мужская обувь');
+
+-- статусы заказов
+CREATE TABLE order_statuses (
+    id INT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+INSERT INTO order_statuses (id, name) VALUES
+(1, 'Завершен'),
+(2, 'Новый');
+
+-- пункты выдачи
+CREATE TABLE pickup_points (
+    id INT NOT NULL PRIMARY KEY,
+    index_code INT,
+    city_id INT,
+    street_id INT,
+    house INT,
+    FOREIGN KEY (city_id) REFERENCES city(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (street_id) REFERENCES streets(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO pickup_points (id, index_code, city_id, street_id, house) VALUES
+(1, 420151, 1, 2, 32),
+(2, 125061, 1, 18, 8),
+(3, 630370, 1, 29, 24),
+(4, 400562, 1, 5, 32),
+(5, 614510, 1, 9, 47),
+(6, 410542, 1, 21, 46),
+(7, 620839, 1, 26, 8),
+(8, 443890, 1, 7, 1),
+(9, 603379, 1, 24, 46),
+(10, 603721, 1, 3, 41),
+(11, 410172, 1, 22, 13),
+(12, 614611, 1, 11, 50),
+(13, 454311, 1, 14, 19),
+(14, 660007, 1, 15, 19),
+(15, 603036, 1, 20, 4),
+(16, 394060, 1, 25, 43),
+(17, 410661, 1, 28, 50),
+(18, 625590, 1, 7, 20),
+(19, 625683, 1, 1, 0),
+(20, 450983, 1, 8, 26),
+(21, 394782, 1, 27, 3),
+(22, 603002, 1, 4, 28),
+(23, 450558, 1, 12, 30),
+(24, 344288, 1, 27, 1),
+(25, 614164, 1, 30, 30),
+(26, 394242, 1, 7, 43),
+(27, 660540, 1, 23, 25),
+(28, 125837, 1, 29, 40),
+(29, 125703, 1, 16, 49),
+(30, 625283, 1, 17, 46),
+(31, 614753, 1, 19, 35),
+(32, 426030, 1, 9, 44),
+(33, 450375, 1, 6, 44),
+(34, 625560, 1, 13, 12),
+(35, 630201, 1, 8, 17),
+(36, 190949, 1, 10, 26);
+
+-- товары
+CREATE TABLE products (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    article TEXT,
+    product_name TEXT,
+    unit TEXT,
+    price INT,
+    discount INT,
+    stock_quantity INT,
+    description TEXT,
+    photo TEXT,
+    supplier_id INT,
+    manufacturer_id INT,
+    category_id INT,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES product_categories(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO products (id, article, product_name, unit, price, discount, stock_quantity, description, photo, supplier_id, manufacturer_id, category_id) VALUES
+(1, 'А112Т4', 'Ботинки', 'шт.', 4990, 3, 6, 'Женские Ботинки демисезонные kari', '1.jpg', 1, 1, 1),
+(2, 'F635R4', 'Ботинки', 'шт.', 3244, 2, 13, 'Ботинки Marco Tozzi женские демисезонные, размер 39, цвет бежевый', '2.jpg', 2, 2, 1),
+(3, 'H782T5', 'Туфли', 'шт.', 4499, 4, 5, 'Туфли kari мужские классика MYZ21AW-450A, размер 43, цвет: черный', '3.jpg', 1, 1, 2),
+(4, 'G783F5', 'Ботинки', 'шт.', 5900, 2, 8, 'Мужские ботинки Рос-Обувь кожаные с натуральным мехом', '4.jpg', 1, 3, 2),
+(5, 'J384T6', 'Ботинки', 'шт.', 3800, 2, 16, 'B3430/14 Полуботинки мужские Rieker', '5.jpg', 2, 4, 2),
+(6, 'D572U8', 'Кроссовки', 'шт.', 4100, 3, 6, '129615-4 Кроссовки мужские', '6.jpg', 2, 3, 2),
+(7, 'F572H7', 'Туфли', 'шт.', 2700, 2, 14, 'Туфли Marco Tozzi женские летние, размер 39, цвет черный', '7.jpg', 1, 2, 1),
+(8, 'D329H3', 'Полуботинки', 'шт.', 1890, 4, 4, 'Полуботинки Alessio Nesca женские 3-30797-47, размер 37, цвет: бордовый', '8.jpg', 2, 5, 1),
+(9, 'B320R5', 'Туфли', 'шт.', 4300, 2, 6, 'Туфли Rieker женские демисезонные, размер 41, цвет коричневый', '9.jpg', 1, 4, 1),
+(10, 'G432E4', 'Туфли', 'шт.', 2800, 3, 15, 'Туфли kari женские TR-YR-413017, размер 37, цвет: черный', '10.jpg', 1, 1, 1),
+(11, 'S213E3', 'Полуботинки', 'шт.', 2156, 3, 6, '407700/01-01 Полуботинки мужские CROSBY', '', 2, 6, 2),
+(12, 'E482R4', 'Полуботинки', 'шт.', 1800, 2, 14, 'Полуботинки kari женские MYZ20S-149, размер 41, цвет: черный', '', 1, 1, 1),
+(13, 'S634B5', 'Кеды', 'шт.', 5500, 3, 0, 'Кеды Caprice мужские демисезонные, размер 42, цвет черный', '', 2, 6, 2),
+(14, 'K345R4', 'Полуботинки', 'шт.', 2100, 2, 3, '407700/01-02 Полуботинки мужские CROSBY', '', 2, 6, 2),
+(15, 'O754F4', 'Туфли', 'шт.', 5400, 4, 18, 'Туфли женские демисезонные Rieker артикул 55073-68/37', '', 2, 4, 1),
+(16, 'G531F4', 'Ботинки', 'шт.', 6600, 12, 9, 'Ботинки женские зимние ROMER арт. 893167-01 Черный', '', 1, 1, 2),
+(17, 'J542F5', 'Тапочки', 'шт.', 500, 13, 0, 'Тапочки мужские Арт.70701-55-67син р.41', '', 1, 1, 2),
+(18, 'B431R5', 'Ботинки', 'шт.', 2700, 2, 5, 'Мужские кожаные ботинки/мужские ботинки', '', 2, 4, 2),
+(19, 'P764G4', 'Туфли', 'шт.', 6800, 15, 15, 'Туфли женские, ARGO, размер 38', '', 1, 6, 1),
+(20, 'C436G5', 'Ботинки', 'шт.', 10200, 15, 9, 'Ботинки женские, ARGO, размер 40', '', 1, 5, 1),
+(21, 'F427R5', 'Ботинки', 'шт.', 11800, 15, 11, 'Ботинки на молнии с декоративной пряжкой FRAU', '', 2, 4, 1),
+(22, 'N457T5', 'Полуботинки', 'шт.', 4600, 3, 13, 'Полуботинки Ботинки черные зимние, мех', '', 1, 6, 1),
+(23, 'D364R4', 'Туфли', 'шт.', 12400, 16, 5, 'Туфли Luiza Belly женские Kate-lazo черные из натуральной замши', '', 1, 1, 1),
+(24, 'S326R5', 'Тапочки', 'шт.', 9900, 17, 15, 'Мужские кожаные тапочки "Профиль С.Дали"', '', 2, 6, 2),
+(25, 'L754R4', 'Полуботинки', 'шт.', 1700, 2, 7, 'Полуботинки kari женские WB2020SS-26, размер 38, цвет: черный', '', 1, 1, 1),
+(26, 'M542T5', 'Кроссовки', 'шт.', 2800, 18, 3, 'Кроссовки мужские TOFA', '', 2, 4, 2),
+(27, 'D268G5', 'Туфли', 'шт.', 4399, 3, 12, 'Туфли Rieker женские демисезонные, размер 36, цвет коричневый', '', 2, 4, 1),
+(28, 'T324F5', 'Сапоги', 'шт.', 4699, 2, 5, 'Сапоги замша Цвет: синий', '', 1, 6, 1),
+(29, 'K358H6', 'Тапочки', 'шт.', 599, 20, 2, 'Тапочки мужские син р.41', '', 1, 4, 2),
+(30, 'H535R5', 'Ботинки', 'шт.', 2300, 2, 7, 'Женские Ботинки демисезонные', '', 2, 4, 1);
+
+-- заказы
+CREATE TABLE orders (
+    id INT NOT NULL PRIMARY KEY,
+    order_date TEXT,
+    delivery_date TEXT,
+    receipt_code INT,
+    client_id INT,
+    pickup_point_id INT,
+    status_id INT,
+    FOREIGN KEY (client_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (pickup_point_id) REFERENCES pickup_points(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES order_statuses(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO orders (id, order_date, delivery_date, receipt_code, client_id, pickup_point_id, status_id) VALUES
+(1, '27.02.2025', '20.04.2025', 901, 4, 1, 1),
+(2, '27.02.2025', '20.04.2025', 901, 4, 1, 1),
+(3, '28.09.2022', '21.04.2025', 902, 1, 11, 1),
+(4, '28.09.2022', '21.04.2025', 902, 1, 11, 1),
+(5, '21.03.2025', '22.04.2025', 903, 2, 2, 1),
+(6, '21.03.2025', '22.04.2025', 903, 2, 2, 1),
+(7, '20.02.2025', '23.04.2025', 904, 3, 11, 1),
+(8, '20.02.2025', '23.04.2025', 904, 3, 11, 1),
+(9, '17.03.2025', '24.04.2025', 905, 4, 2, 1),
+(10, '17.03.2025', '24.04.2025', 905, 4, 2, 1),
+(11, '01.03.2025', '25.04.2025', 906, 1, 15, 1),
+(12, '01.03.2025', '25.04.2025', 906, 1, 15, 1),
+(13, '30.02.2025', '26.04.2025', 907, 2, 3, 1),
+(14, '30.02.2026', '27.04.2025', 907, 2, 3, 1),
+(15, '31.03.2025', '27.04.2025', 908, 3, 19, 2),
+(16, '31.03.2025', '27.04.2025', 908, 3, 19, 2),
+(17, '02.04.2025', '28.04.2025', 909, 4, 5, 2),
+(18, '02.04.2025', '28.04.2025', 909, 4, 5, 2),
+(19, '03.04.2025', '29.04.2025', 910, 4, 19, 2),
+(20, '03.04.2025', '29.04.2025', 910, 4, 19, 2);
+
+-- состав заказа
+CREATE TABLE order_items (
+    id INT NOT NULL PRIMARY KEY,
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO order_items (id, order_id, product_id, quantity) VALUES
+(1, 1, 1, 2),
+(2, 2, 2, 2),
+(3, 3, 3, 1),
+(4, 4, 4, 1),
+(5, 5, 5, 10),
+(6, 6, 6, 10),
+(7, 7, 7, 5),
+(8, 8, 8, 4),
+(9, 9, 1, 2),
+(10, 10, 2, 2),
+(11, 11, 3, 1),
+(12, 12, 4, 1),
+(13, 13, 5, 10),
+(14, 14, 6, 10),
+(15, 15, 7, 5),
+(16, 16, 8, 4),
+(17, 17, 9, 5),
+(18, 18, 10, 1),
+(19, 19, 11, 5),
+(20, 20, 12, 5);
+
+
+SELECT * FROM city;
+SELECT * FROM streets;
+SELECT * FROM roles;
+SELECT * FROM users;
+SELECT * FROM suppliers;
+SELECT * FROM manufacturers;
+SELECT * FROM product_categories;
+SELECT * FROM order_statuses;
+SELECT * FROM pickup_points;
+SELECT * FROM products;
+SELECT * FROM orders;
+SELECT * FROM order_items;
+
+edit_product.ui
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>629</width>
+    <height>330</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Добавление товара</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_5">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="idLabel">
+           <property name="text">
+            <string>ID Товара</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="idEdit">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <!-- НОВЫЙ БЛОК: Артикул -->
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_article">
+         <item>
+          <widget class="QLabel" name="articleLabel">
+           <property name="text">
+            <string>Артикул</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="articleEdit">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+           <property name="placeholderText">
+            <string>Например: А112Т4</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <item>
+          <widget class="QLabel" name="nameLabel">
+           <property name="text">
+            <string>Наименование товара</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="nameEdit">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="categoryLabel">
+           <property name="text">
+            <string>Категория товара</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="categoryComboBox">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="opisanieLabel">
+           <property name="text">
+            <string>Описание товара</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="opisanieEdit">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="proizvoditelLabel">
+           <property name="text">
+            <string>Производитель</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="proizvoditelComboBox">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="imageLabel">
+         <property name="text">
+          <string>Фото</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="chooseImageBtn">
+         <property name="styleSheet">
+          <string notr="true">background-color: #00FA9A;</string>
+         </property>
+         <property name="text">
+          <string>Выбрать изображение</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0" colspan="2">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <item>
+          <widget class="QPushButton" name="saveBtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: #00FA9A;</string>
+           </property>
+           <property name="text">
+            <string>Сохранить</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cancelBtn">
+           <property name="styleSheet">
+            <string notr="true">background-color: #00FA9A;</string>
+           </property>
+           <property name="text">
+            <string>Отмена</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="1">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="postavshikLabel">
+           <property name="text">
+            <string>Поставщик</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="postavshikComboBox">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLabel" name="priceLabel">
+           <property name="text">
+            <string>Цена</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="priceSpinBox">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+           <property name="prefix">
+            <string>₽</string>
+           </property>
+           <property name="maximum">
+            <double>1000000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QLabel" name="izmerenieLabel">
+           <property name="text">
+            <string>Единица измерения</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="izmerenieEdit">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <widget class="QLabel" name="kolvoLabel">
+           <property name="text">
+            <string>Кол-во на складе</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="kolvoSpinBox">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+           <property name="maximum">
+            <number>1000000</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <item>
+          <widget class="QLabel" name="skidkaLabel">
+           <property name="text">
+            <string>Скидка (%)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="skidkaSpinBox">
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black</string>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+
+login.ui
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>zagolovok</class>
+ <widget class="QMainWindow" name="zagolovok">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>350</width>
+    <height>267</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>350</width>
+    <height>267</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>350</width>
+    <height>267</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>Times New Roman</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Авторизация</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="authLb">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Авторизация</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="logo">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap>../images/Icon.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="logoLabel">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap>../../../../Desktop/4course/ОП.13 Программирование на языке высокого уровня (Типикина)/ДЕМО 2026/import/Icon.JPG</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLineEdit" name="loginEdit">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="placeholderText">
+         <string>Введите логин</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="passwordEdit">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Введите пароль</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="loginBtn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #00FA9A;
+color: black;
+</string>
+        </property>
+        <property name="text">
+         <string>Войти</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="guestBtn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #00FA9A;
+color: black;
+</string>
+        </property>
+        <property name="text">
+         <string>Войти как гость</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>350</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+
+orders.ui
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>678</width>
+    <height>237</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <widget class="QFrame" name="orderFrame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>180</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>220</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 2px solid black;
+background-color: white;
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+      <item>
+       <widget class="QFrame" name="infoFrame">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid black;
+background-color: white;
+</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QLabel" name="articl_orderLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+               <pointsize>8</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Артикул заказа:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="status_orderLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Статус заказа:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="punktLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Адрес пункта выдачи:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="date_deliveryLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Дата заказа:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="deliveryFrame">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="deliveryLabel">
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 0px;</string>
+           </property>
+           <property name="text">
+            <string>Дата доставки</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+
+product_card.ui
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>678</width>
+    <height>280</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <widget class="QFrame" name="productFrame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>180</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>220</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 2px solid black;
+background-color: white;
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+      <item>
+       <widget class="QFrame" name="imageFrame">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="imageLabel">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 0px;</string>
+           </property>
+           <property name="text">
+            <string>Фото</string>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="infoFrame">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid black;
+background-color: white;
+</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="categoryLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+               <pointsize>8</pointsize>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+               <underline>false</underline>
+               <strikeout>false</strikeout>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Категория товара</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="spacerLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>|</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="nameLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+               <pointsize>8</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Наименование товара</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QLabel" name="articleLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Артикул:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="opisanieLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Описание товара:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="proizvoditelLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Производитель:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="postavshikLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Поставщик:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="priceLabel">
+               <property name="font">
+                <font>
+                 <family>Times New Roman</family>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border: 0px;</string>
+               </property>
+               <property name="text">
+                <string>Цена:</string>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="finalPriceLabel">
+               <property name="font">
+                <font>
+                 <family>Times New Roman</family>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border: 0px</string>
+               </property>
+               <property name="text">
+                <string>Цена со скидкой:</string>
+               </property>
+               <property name="scaledContents">
+                <bool>false</bool>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="izmerenieLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Единица измерения:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="kolvoLabel">
+             <property name="font">
+              <font>
+               <family>Times New Roman</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 0px;</string>
+             </property>
+             <property name="text">
+              <string>Количество на складе:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="discountFrame">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="discountLabel">
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 0px;</string>
+           </property>
+           <property name="text">
+            <string>Действующая скидка</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="deleteBtn">
+     <property name="font">
+      <font>
+       <family>Times New Roman</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: #00FA9A;</string>
+     </property>
+     <property name="text">
+      <string>Удалить товар</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+
+spisok_tovarov.ui
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>903</width>
+    <height>524</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Times New Roman</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Список товаров</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <layout class="QHBoxLayout" name="exitLayout">
+      <item>
+       <widget class="QPushButton" name="ordersBtn">
+        <property name="styleSheet">
+         <string notr="true">background-color: #00FA9A;</string>
+        </property>
+        <property name="text">
+         <string>Заказы</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="fioLabel">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>ФИО пользователя</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="exitBtn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #00FA9A;</string>
+        </property>
+        <property name="text">
+         <string>Выход</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="poiskEdit">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid black</string>
+        </property>
+        <property name="placeholderText">
+         <string>Поиск по товарам</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QComboBox" name="sortComboBox">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid black</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Без сортировки</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>По возрастанию кол-ва на складе</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>По убыванию кол-ва на складе</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QComboBox" name="postavshikComboBox">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid black</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addProductBtn">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #00FA9A;</string>
+        </property>
+        <property name="text">
+         <string>Добавить товар</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_8">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QScrollArea" name="spisokTovarov">
+      <property name="styleSheet">
+       <string notr="true">background-color: white;</string>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>879</width>
+         <height>346</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3"/>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>903</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+
+# auth.py
+from db import get_connection
+import pymysql
+
+# 1) Проверка пользователя по логину и паролю
+def check_user(login, password):
+    try:
+        # Подключаемся к БД и создаём курсор для SQL-запросов
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # Поиск пользователя по логину и паролю, получаем роль и ФИО
+        sql = """
+        SELECT r.name, u.surname, u.name, u.patronymic
+        FROM users u
+        JOIN roles r ON u.role_id = r.id
+        WHERE u.login = %s AND u.password = %s
+        """
+        cursor.execute(sql, (login, password)) # выполнение запроса с параметрами логин и пароль
+
+        result = cursor.fetchone() # получение одной строки результата
+        conn.close() # закрытие соединения с БД
+        return result # возвращение результата(пользователя)
+
+    # Ошибка подключения или запроса к БД
+    except pymysql.MySQLError:
+        return None
+
+# db.py
+import pymysql
+import random
+import string
+
+# Генерация уникального артикула
+def generate_article():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+# 1) Создание и возвращение подключения к БД
+def get_connection():
+    return pymysql.connect(
+        host="localhost",
+        user="root",
+        password="root",
+        database="shop_shoes",
+        charset='utf8mb4' # кодировка для RU
+    )
+
+# 2) Получение списка всех поставщиков для фильтра
+def get_postavshiki():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = "SELECT name FROM suppliers"
+    cursor.execute(sql)
+
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+# 3) Универсальный запрос для поиска, фильтра и сортировки
+def get_products_filtered(poisk_text="", postavshik="Все поставщики", order=None):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+    SELECT 
+        p.id,
+        pc.name,
+        p.article,
+        p.product_name,
+        p.description,
+        m.name,
+        s.name,
+        p.price,
+        p.unit,
+        p.stock_quantity,
+        p.discount,
+        p.photo
+    FROM products p
+    JOIN product_categories pc ON p.category_id = pc.id
+    JOIN manufacturers m ON p.manufacturer_id = m.id
+    JOIN suppliers s ON p.supplier_id = s.id
+    WHERE 1=1
+    """
+
+    params = []
+
+    # Поиск по всем доступным данным и нескольким атрибутам одновременно (админ и менеджер)
+    if poisk_text:
+        words = poisk_text.split() # разбиваем на слова
+        for word in words:
+            sql += """
+            AND (
+                pc.name LIKE %s OR
+                p.article LIKE %s OR
+                p.product_name LIKE %s OR
+                p.description LIKE %s OR
+                m.name LIKE %s OR
+                s.name LIKE %s
+            )
+            """
+            pattern = f"%{word}%"
+            params.extend([pattern] * 6)
+
+    # Фильтр по поставщику
+    if postavshik and postavshik != "Все поставщики":
+        sql += " AND s.name = %s"
+        params.append(postavshik)
+
+    # Сортировка товаров по кол-во на складе ("DESC" - по убыванию, "ASC" - по возрастанию)
+    if order == "ASC":
+        sql += " ORDER BY p.stock_quantity ASC"
+    elif order == "DESC":
+        sql += " ORDER BY p.stock_quantity DESC"
+
+    cursor.execute(sql, params) # выполнение запроса
+    result = cursor.fetchall() # получение всех строк результата
+    conn.close() # закрытия соединения с БД
+    return result # возращение результата запроса (список кортежей)
+
+# 4) Получение всех категорий для заполнения ComboBox в окне добавления товара
+def get_categories():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name FROM product_categories")
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+# 5) Получение всех производителей для заполнения ComboBox в окне добавления товара
+def get_proizvoditel():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name FROM manufacturers")
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+# 6) Получение всех поставщиков для заполнения ComboBox в окне добавления товара
+def get_postavshik():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name FROM suppliers")
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+# 7) Добавление данных о товаре в БД
+def insert_product(article, name, category_id, description, proiz_id,
+                   post_id, price, unit, quantity, discount, photo):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+    INSERT INTO products
+    (article, product_name, category_id, description, manufacturer_id, supplier_id,
+     price, unit, stock_quantity, discount, photo)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+
+    cursor.execute(sql, (
+        article, name, category_id, description,
+        proiz_id, post_id, price, unit, quantity, discount, photo
+    ))
+
+    conn.commit()
+    conn.close()
+
+# 8) Получение товара по ID для редактирования
+def get_product_by_id(product_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+    SELECT 
+        id,
+        article,
+        product_name,
+        description,
+        price,
+        unit,
+        stock_quantity,
+        discount,
+        category_id,
+        manufacturer_id,
+        supplier_id,
+        photo
+    FROM products
+    WHERE id = %s
+    """
+
+    cursor.execute(sql, (product_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result
+
+# 9) Обновление товара для редактирования
+def update_product(product_id, article, name, category_id, description,
+                   proiz_id, post_id, price, unit, quantity, discount, photo_path):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+    UPDATE products
+    SET 
+        article = %s,
+        product_name = %s,
+        category_id = %s,
+        description = %s,
+        manufacturer_id = %s,
+        supplier_id = %s,
+        price = %s,
+        unit = %s,
+        stock_quantity = %s,
+        discount = %s,
+        photo = %s
+    WHERE id = %s
+    """
+
+    cursor.execute(sql, (
+        article, name, category_id, description, proiz_id, post_id,
+        price, unit, quantity, discount, photo_path, product_id
+    ))
+
+    conn.commit()
+    conn.close()
+
+# 10) Проверка если ли товар в заказах
+def product_in_orders(product_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    query = """
+        SELECT COUNT(*)
+        FROM order_items
+        WHERE product_id = %s
+    """
+    cursor.execute(query, (product_id,))
+    count = cursor.fetchone()[0]
+
+    conn.close()
+    return count > 0
+
+# 11) Удаление товара
+def delete_product(product_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    query = "DELETE FROM products WHERE id = %s"
+    cursor.execute(query, (product_id,))
+    conn.commit()
+
+    conn.close()
+
+# 12) Получение фото товара по ID
+def get_product_photo(product_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT photo FROM products WHERE id = %s"
+    cursor.execute(query, (product_id,))
+    result = cursor.fetchone()
+
+    conn.close()
+    if result:
+        return result[0]
+    return None
+
+# 13) Получаем новый ID товара автоматически
+def get_next_product_id():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT MAX(id) FROM products")
+    result = cursor.fetchone()
+    conn.close()
+    return (result[0] or 0) + 1
+
+# 14) Получение всех заказов с деталями
+def get_all_orders():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+    SELECT 
+        o.id,
+        o.order_date,
+        o.delivery_date,
+        o.receipt_code,
+        CONCAT(u.surname, ' ', u.name, ' ', IFNULL(u.patronymic, '')) AS client_fio,
+        CONCAT(c.name, ', ', s.name, ', д.', pp.house) AS pickup_address,
+        os.name AS status_name,
+        o.pickup_point_id,
+        o.client_id,
+        o.status_id
+    FROM orders o
+    JOIN users u ON o.client_id = u.id
+    JOIN pickup_points pp ON o.pickup_point_id = pp.id
+    JOIN city c ON pp.city_id = c.id
+    JOIN streets s ON pp.street_id = s.id
+    JOIN order_statuses os ON o.status_id = os.id
+    ORDER BY o.id
+    """
+
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+
+# 15) Получение товаров в заказе
+def get_order_items(order_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+    SELECT 
+        oi.id,
+        oi.product_id,
+        p.article,
+        p.product_name,
+        oi.quantity,
+        p.price,
+        p.discount,
+        (p.price - (p.price * p.discount / 100)) * oi.quantity AS total_price
+    FROM order_items oi
+    JOIN products p ON oi.product_id = p.id
+    WHERE oi.order_id = %s
+    """
+
+    cursor.execute(sql, (order_id,))
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+
+# 16) Обновление статуса заказа
+def update_order_status(order_id, status_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = "UPDATE orders SET status_id = %s WHERE id = %s"
+    cursor.execute(sql, (status_id, order_id))
+
+    conn.commit()
+    conn.close()
+
+
+# 17) Получение всех статусов заказов
+def get_order_statuses():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = "SELECT id, name FROM order_statuses"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+# edit_product_window.py
+from PyQt6 import uic
+from PyQt6.QtWidgets import QDialog, QFileDialog, QMessageBox
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
+import os
+import shutil
+import random
+import string
+
+from db import (get_categories, get_proizvoditel, get_postavshik, insert_product,
+                get_product_by_id, update_product, get_next_product_id)
+
+# Генерация случайного артикула
+def generate_article():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+class EditProductWindow(QDialog):
+    def __init__(self, parent=None, product_id=None):
+        super().__init__(parent)
+        uic.loadUi("ui/edit_product.ui", self)
+
+        self.product_id = product_id
+
+        self.saveBtn.clicked.connect(self.save_product)
+        self.cancelBtn.clicked.connect(self.close)
+        self.chooseImageBtn.clicked.connect(self.choose_image)
+        self.current_photo = None
+
+        self.load_comboboxes()
+
+        if self.product_id: # режим РЕДАКТИРОВАНИЯ
+            self.load_product_data()
+            self.idEdit.setReadOnly(True)
+        else:  # режим ДОБАВЛЕНИЯ
+            self.idEdit.hide()
+            self.idLabel.hide()
+            new_id = get_next_product_id()
+            self.idEdit.setText(str(new_id))
+            self.articleEdit.setText(generate_article()) # Генерируем артикул для нового товара
+
+    # 1) Заполнение комбо-боксов данными из БД
+    def load_comboboxes(self):
+        self.categoryComboBox.clear()
+        for cat_id, name in get_categories():
+            self.categoryComboBox.addItem(name, cat_id)
+
+        self.proizvoditelComboBox.clear()
+        for proiz_id, name in get_proizvoditel():
+            self.proizvoditelComboBox.addItem(name, proiz_id)
+
+        self.postavshikComboBox.clear()
+        for post_id, name in get_postavshik():
+            self.postavshikComboBox.addItem(name, post_id)
+
+    # 2) Сохранение добавленных данных для товара в БД
+    def save_product(self):
+        article = self.articleEdit.text().strip()
+        name = self.nameEdit.text().strip()
+        description = self.opisanieEdit.text().strip()
+        unit = self.izmerenieEdit.text().strip()
+
+        price = self.priceSpinBox.value()
+        quantity = self.kolvoSpinBox.value()
+        discount = self.skidkaSpinBox.value()
+
+        category_id = self.categoryComboBox.currentData()
+        proiz_id = self.proizvoditelComboBox.currentData()
+        post_id = self.postavshikComboBox.currentData()
+
+        photo_path = self.current_photo if self.current_photo else "picture.png"
+
+        if not article:
+            QMessageBox.warning(self, "Ошибка ввода", "Введите артикул товара.")
+            return
+
+        if not name:
+            QMessageBox.warning(self, "Ошибка ввода", "Введите наименование товара.")
+            return
+
+        if not unit:
+            QMessageBox.warning(self, "Ошибка ввода", "Введите единицу измерения товара.")
+            return
+
+        if price <= 0:
+            QMessageBox.warning(self, "Ошибка ввода", "Цена должна быть больше 0.")
+            return
+
+        if quantity < 0:
+            QMessageBox.warning(self, "Ошибка ввода", "Количество не может быть отрицательным.")
+            return
+
+        if discount < 0 or discount > 100:
+            QMessageBox.warning(self, "Ошибка ввода", "Скидка должна быть в диапазоне от 0 до 100%.")
+            return
+
+        try:
+            if self.product_id: # если это режим РЕДАКТИРОВАНИЯ
+                update_product(
+                    self.product_id, article, name, category_id, description,
+                    proiz_id, post_id, price, unit, quantity, discount, photo_path
+                )
+                QMessageBox.information(self, "Успех", "Товар успешно обновлён.")
+
+            else: # если это режим ДОБАВЛЕНИЯ
+                insert_product(
+                    article, name, category_id, description,
+                    proiz_id, post_id, price, unit, quantity, discount, photo_path
+                )
+                QMessageBox.information(self, "Успех", "Товар успешно добавлен.")
+
+            self.accept()
+
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Ошибка сохранения",
+                f"Не удалось сохранить товар.\nОшибка: {str(e)}"
+            )
+
+    # 3) Редактирование товара (загружает данные товара в поля формы)
+    def load_product_data(self):
+        product = get_product_by_id(self.product_id)
+
+        if not product:
+            return
+
+        self.idEdit.setText(str(product[0]))
+        self.articleEdit.setText(product[1]) # артикул
+        self.nameEdit.setText(product[2]) # наименование
+        self.opisanieEdit.setText(product[3]) # описание
+        self.priceSpinBox.setValue(float(product[4]))
+        self.izmerenieEdit.setText(product[5])
+        self.kolvoSpinBox.setValue(product[6])
+        self.skidkaSpinBox.setValue(product[7])
+
+        self.categoryComboBox.setCurrentIndex(
+            self.categoryComboBox.findData(product[8])
+        )
+        self.proizvoditelComboBox.setCurrentIndex(
+            self.proizvoditelComboBox.findData(product[9])
+        )
+        self.postavshikComboBox.setCurrentIndex(
+            self.postavshikComboBox.findData(product[10])
+        )
+
+        self.current_photo = product[11]
+
+        # показываем фото
+        if self.current_photo:
+            image_path = os.path.join("images", self.current_photo)
+            if os.path.exists(image_path):
+                pixmap = QPixmap(image_path)
+                pixmap = pixmap.scaled(
+                    self.imageLabel.width(),
+                    self.imageLabel.height(),
+                    Qt.AspectRatioMode.KeepAspectRatio
+                )
+                self.imageLabel.setPixmap(pixmap)
+
+    # 4) Выбор картинки (копирует картинку в папку images и сохраняет имя файла в БД)
+    def choose_image(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Выбрать изображение",
+            "",
+            "Images (*.png *.jpg *.jpeg)"
+        )
+
+        if not file_path:
+            return
+
+        try:
+            os.makedirs("images", exist_ok=True)
+            file_name = os.path.basename(file_path)
+            save_path = os.path.join("images", file_name)
+
+            # УДАЛЯЕМ старую картинку, если она была
+            if self.current_photo and self.current_photo != "picture.png":
+                old_path = os.path.join("images", self.current_photo)
+                # если выбрали ДРУГУЮ картинку
+                if os.path.exists(old_path) and self.current_photo != file_name:
+                    os.remove(old_path)
+
+            # если файл не из папки images — копируем
+            if os.path.abspath(file_path) != os.path.abspath(save_path):
+                shutil.copy(file_path, save_path)
+
+            # сохраняем имя файла
+            self.current_photo = file_name
+
+            pixmap = QPixmap(save_path)
+            pixmap = pixmap.scaled(
+                self.imageLabel.width(),
+                self.imageLabel.height(),
+                Qt.AspectRatioMode.KeepAspectRatio
+            )
+            self.imageLabel.setPixmap(pixmap)
+
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Ошибка изображения",
+                f"Не удалось загрузить изображение.\nОшибка: {str(e)}"
+            )
+
+# main.py
+import sys
+
+from PyQt6 import uic
+from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt6.QtGui import QIcon
+
+from products_window import ProductsWindow
+from auth import check_user
+
+# Окно авторизации
+class Login(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("ui/login.ui", self)
+
+        self.loginBtn.clicked.connect(self.login)
+        self.guestBtn.clicked.connect(self.guest_login)
+
+    # 1) Вход по логину и паролю
+    def login(self):
+        # получение текста из полей без пробелов
+        login = self.loginEdit.text().strip()
+        password = self.passwordEdit.text().strip()
+
+        # если логин или пароль пустые
+        if not login or not password:
+            QMessageBox.warning(
+                self,
+                "Ошибка ввода",
+                "Поля «Логин» и «Пароль» не могут быть пустыми.\n"
+                "Введите данные и повторите попытку."
+            )
+            return
+
+        # проверка пользователя в БД
+        result = check_user(login, password)
+
+        if result:
+            role = result[0] # роль пользователя
+            fio = f"{result[0]} - {result[1]} {result[2]} {result[3]}" # строка ФИО
+
+            # окно со списком товаров
+            self.window = ProductsWindow(fio, role)
+            self.window.show() # показ нового окна
+            self.close() # закрытие окна авторизации
+
+        else: # если пользователь не найден
+            QMessageBox.critical(
+                self,
+                "Ошибка авторизации",
+                "Пользователь с таким логином и паролем не найден.\n"
+                "Проверьте правильность введённых данных."
+            )
+
+    # 2) Вход под гостем
+    def guest_login(self):
+        self.window = ProductsWindow("Гость", "Гость")
+        self.window.show() # показ окна
+        self.close() # закрытие окна авторизации
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon("images/icon.png")) # иконка приложения
+    window = Login() # создание окна авторизации
+    window.show() # показ окна
+    sys.exit(app.exec())
+
+# order_card.py
+from PyQt6 import uic
+from PyQt6.QtWidgets import QFrame, QComboBox, QMessageBox
+from PyQt6.QtCore import pyqtSignal
+
+from db import get_order_items, update_order_status, get_order_statuses
+
+
+class OrderCard(QFrame):
+    order_updated = pyqtSignal()
+
+    def __init__(self, order_data, role, parent=None):
+        super().__init__(parent)
+        uic.loadUi("ui/orders.ui", self)
+
+        self.order_id = order_data[0]
+        self.role = role
+        self.current_status_id = order_data[9]
+
+        # Заполняем данные
+        self.articl_orderLabel.setText(f"Артикул заказа: {order_data[3]}")
+        self.status_orderLabel.setText(f"Статус заказа: {order_data[6]}")
+        self.punktLabel.setText(f"Адрес пункта выдачи: {order_data[4]}")
+        self.date_deliveryLabel.setText(f"Дата заказа: {order_data[1]}")
+
+        # Дата доставки
+        if order_data[2] and order_data[2].strip():
+            self.deliveryLabel.setText(f"Дата доставки\n{order_data[2]}")
+        else:
+            self.deliveryLabel.setText("Дата доставки\nне указана")
+
+        # Для менеджера и администратора добавляем выбор статуса
+        if role in ["Менеджер", "Администратор"]:
+            self.add_status_combobox()
+
+        # Клик по карточке для просмотра деталей
+        self.orderFrame.mousePressEvent = lambda event: self.show_order_details()
+
+    def add_status_combobox(self):
+        layout = self.deliveryFrame.layout()
+
+        self.status_combo = QComboBox(self)
+        self.status_combo.setStyleSheet("border: 1px solid black;")
+
+        statuses = get_order_statuses()
+        for status_id, status_name in statuses:
+            self.status_combo.addItem(status_name, status_id)
+            if status_id == self.current_status_id:
+                self.status_combo.setCurrentText(status_name)
+
+        self.status_combo.currentIndexChanged.connect(self.on_status_changed)
+        layout.addWidget(self.status_combo)
+
+    # Обработчик изменения статуса
+    def on_status_changed(self, index):
+        new_status_id = self.status_combo.currentData()
+        new_status_name = self.status_combo.currentText()
+
+        # Если статус не изменился - ничего не делаем
+        if new_status_id == self.current_status_id:
+            return
+
+        # Подтверждение изменения
+        reply = QMessageBox.question(
+            self, "Подтверждение",
+            f"Изменить статус заказа №{self.order_id} на '{new_status_name}'?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            try:
+                update_order_status(self.order_id, new_status_id)
+                self.current_status_id = new_status_id
+                self.status_orderLabel.setText(f"Статус заказа: {new_status_name}")
+                self.order_updated.emit()
+                QMessageBox.information(self, "Успех", "Статус заказа обновлён!")
+            except Exception as e:
+                QMessageBox.critical(self, "Ошибка", f"Не удалось обновить статус: {str(e)}")
+                # Возвращаем старый статус в ComboBox
+                self.status_combo.blockSignals(True)
+                for i in range(self.status_combo.count()):
+                    if self.status_combo.itemData(i) == self.current_status_id:
+                        self.status_combo.setCurrentIndex(i)
+                        break
+                self.status_combo.blockSignals(False)
+        else:
+            # Пользователь отказался - возвращаем старый статус в ComboBox
+            self.status_combo.blockSignals(True)
+            for i in range(self.status_combo.count()):
+                if self.status_combo.itemData(i) == self.current_status_id:
+                    self.status_combo.setCurrentIndex(i)
+                    break
+            self.status_combo.blockSignals(False)
+
+    def show_order_details(self):
+        items = get_order_items(self.order_id)
+
+        if not items:
+            QMessageBox.information(self, "Заказ", f"Заказ №{self.order_id} не содержит товаров.")
+            return
+
+        details = f"Заказ №{self.order_id}\n\n"
+        details += "Товары в заказе:\n"
+
+        total_sum = 0
+        for item in items:
+            item_id, product_id, article, product_name, quantity, price, discount, total_price = item
+            details += f"Артикул: {article}\n"
+            details += f"Товар: {product_name}\n"
+            details += f"Кол-во: {quantity} шт.\n"
+            details += f"Цена: {price} руб.\n"
+            if discount > 0:
+                details += f"Скидка: {discount}%\n"
+                details += f"Итого: {int(total_price)} руб.\n"
+            else:
+                details += f"Итого: {price * quantity} руб.\n"
+            total_sum += total_price if discount > 0 else price * quantity
+
+        details += f"\nОбщая сумма заказа: {int(total_sum)} руб."
+        QMessageBox.information(self, f"Детали заказа №{self.order_id}", details)
+
+# order_window.py
+from PyQt6 import uic
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QScrollArea, QLabel, QHBoxLayout, QPushButton
+from PyQt6.QtCore import Qt
+
+from db import get_all_orders
+from order_card import OrderCard
+
+
+class OrdersWindow(QMainWindow):
+    def __init__(self, fio, role):
+        super().__init__()
+        self.role = role
+        self.fio = fio
+
+        self.setWindowTitle("Список заказов")
+        self.setGeometry(100, 100, 900, 600)
+        self.setStyleSheet("background-color: white;")
+
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        main_layout = QVBoxLayout(central_widget)
+
+        # Верхняя панель
+        header_layout = QHBoxLayout()
+
+        self.back_btn = QPushButton("Назад к товарам")
+        self.back_btn.setStyleSheet("background-color: #00FA9A;")
+        self.back_btn.clicked.connect(self.go_back)
+        header_layout.addWidget(self.back_btn)
+
+        header_layout.addStretch()
+
+        self.fio_label = QLabel(fio)
+        self.fio_label.setStyleSheet("font-size: 12px;")
+        self.fio_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        header_layout.addWidget(self.fio_label)
+
+        main_layout.addLayout(header_layout)
+
+        # Область прокрутки
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setStyleSheet("background-color: white; border: none;")
+
+        self.content_widget = QWidget()
+        self.content_layout = QVBoxLayout(self.content_widget)
+        self.content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.scroll_area.setWidget(self.content_widget)
+        main_layout.addWidget(self.scroll_area)
+
+        self.load_orders()
+
+    def load_orders(self):
+        # Очищаем старые карточки
+        while self.content_layout.count():
+            item = self.content_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+        orders = get_all_orders()
+
+        if not orders:
+            empty_label = QLabel("Нет заказов")
+            empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            empty_label.setStyleSheet("font-size: 16px; color: gray;")
+            self.content_layout.addWidget(empty_label)
+            return
+
+        for order in orders:
+            card = OrderCard(order, self.role)
+            card.order_updated.connect(self.load_orders)
+            self.content_layout.addWidget(card)
+
+        self.content_layout.addStretch()
+
+    def go_back(self):
+        from products_window import ProductsWindow
+        parts = self.fio.split(" - ", 1)
+        if len(parts) == 2:
+            role = parts[0]
+            fio = parts[1]
+        else:
+            role = self.role
+            fio = self.fio
+
+        self.products_window = ProductsWindow(fio, role)
+        self.products_window.show()
+        self.close()
+
+# product_service.py
+# 1) Принятие товара (кортежа) из БД и подготовка данных для отображения в интерфейсе
+def prepare_product_data(product):
+    # распаковка кортежа product в отдельные переменные
+    (product_id, category, article, name, opisanie, proizvoditel, postavshik,
+     price, izmerenie, kolvo, skidka, photo) = product
+
+    # расчет цены со скидкой
+    if skidka > 0: # если есть скидка, то считаем новую цену
+        new_price = price - ((price * skidka) / 100)
+    else:
+        new_price = None
+
+    # определение цвета карточки товара
+    if kolvo == 0: # нет на складе
+        bg_color = "blue"
+    elif skidka > 15: # скидка > 15%
+        bg_color = "#2E8B57"
+    else: # обычный товар
+        bg_color = None
+
+    # словарь с готовыми данными
+    return {
+        "product_id": product_id,
+        "category": category,
+        "article": article,
+        "name": name,
+        "opisanie": opisanie,
+        "proizvoditel": proizvoditel,
+        "postavshik": postavshik,
+        "price": price,
+        "new_price": new_price,
+        "izmerenie": izmerenie,
+        "kolvo": kolvo,
+        "skidka": skidka,
+        "photo": photo,
+        "bg_color": bg_color
+    }
+
+# products_window.py
+from PyQt6 import uic
+from PyQt6.QtWidgets import QMainWindow, QFrame, QLabel
+from PyQt6.QtWidgets import QPushButton, QMessageBox
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
+import os
+
+from db import get_postavshiki, get_products_filtered
+from product_service import prepare_product_data
+from edit_product_window import EditProductWindow
+from order_window import OrdersWindow
+
+# Окно списка товаров
+class ProductsWindow(QMainWindow):
+    def __init__(self, fio, role):
+        super().__init__()
+        uic.loadUi("ui/spisok_tovarov.ui", self) # интерфейс окна
+
+        self.role = role # сохранение роль пользователя
+        self.fioLabel.setText(fio) # установка фио в надпись
+
+        self.exitBtn.clicked.connect(self.logout) # подключение кнопки для выхода
+
+        self.poiskEdit.textChanged.connect(self.apply_filters_and_sort) # подключение кнопки для поиска
+        self.sortComboBox.currentIndexChanged.connect(self.apply_filters_and_sort) # подключение кнопки для сортировки
+        self.postavshikComboBox.currentIndexChanged.connect(self.apply_filters_and_sort) # кнопка фильтра поставщиков
+
+        self.addProductBtn.clicked.connect(self.open_add_product_window) # кнопка добавления
+        self.ordersBtn.clicked.connect(self.open_orders_window)
+
+        self.setup_by_role() # настройка интерфейса в зависимости от роли
+        self.load_products() # загрузка товаров
+        self.load_postavshiki() # заполняем комбо-бокс поставщиками
+
+        self.selected_product_id = None
+        self.edit_window = None # чтобы не открывать 2 окна
+
+    # 1) Настройка интерфейса по роли
+    def setup_by_role(self):
+        if self.role == "Гость":
+            self.poiskEdit.hide()
+            self.sortComboBox.hide()
+            self.postavshikComboBox.hide()
+            self.addProductBtn.hide()
+            self.ordersBtn.hide()
+
+        elif self.role == "Авторизированный клиент":
+            self.poiskEdit.hide()
+            self.sortComboBox.hide()
+            self.postavshikComboBox.hide()
+            self.addProductBtn.hide()
+            self.ordersBtn.hide()
+
+        elif self.role == "Менеджер":
+            self.poiskEdit.show()
+            self.sortComboBox.show()
+            self.postavshikComboBox.show()
+            self.addProductBtn.hide()
+            self.ordersBtn.show()
+
+        elif self.role == "Администратор":
+            self.poiskEdit.show()
+            self.sortComboBox.show()
+            self.postavshikComboBox.show()
+            self.addProductBtn.show()
+            self.ordersBtn.hide()
+
+    # 2) Выход в окно авторизации
+    def logout(self):
+        from main import Login
+        self.login_window = Login() # создание нового окна входа
+        self.login_window.show() # показ окна
+        self.close() # закрытие текущего окна товаров
+
+    # 3) Показ товаров
+    def load_products(self):
+        self.apply_filters_and_sort()
+
+    # 4) Обработка клика
+    def make_clickable(self, frame, product_id):
+        def handler(event):
+            from PyQt6.QtWidgets import QPushButton
+
+            child = frame.childAt(event.pos())
+
+            # если кликнули по кнопке — даём ей сработать
+            if isinstance(child, QPushButton):
+                child.click()
+                return
+
+            # иначе — это клик по карточке
+            self.open_edit_product_window(product_id)
+
+        frame.mousePressEvent = handler
+
+    # 5) Загрузка товаров и отображение карточек
+    def show_products(self, products):
+        layout = self.spisokTovarov.widget().layout() # Получаем макет внутри ScrollArea (область с прокруткой)
+
+        if layout is None:
+            from PyQt6.QtWidgets import QVBoxLayout
+            layout = QVBoxLayout()
+            self.spisokTovarov.widget().setLayout(layout)
+
+        # очищаем макет layout
+        while layout.count():
+            item = layout.takeAt(0) # Забираем элемент из макета layout
+            widget = item.widget() # получение виджета
+            if widget: # удаление его из памяти
+                widget.deleteLater()
+
+        # перебор товаров
+        for product in products:
+            product_id = product[0]  # ID товара
+            data = prepare_product_data(product) # подготовка данных товара
+
+            # создаём рамку карточки товара
+            frame = QFrame()
+            frame.product_id = data["product_id"] # сохраняем ID товара в карточке
+            uic.loadUi("ui/product_card.ui", frame) # дизайн карточки товара
+
+            delete_btn = frame.findChild(QPushButton, "deleteBtn")
+
+            if delete_btn and self.role == "Администратор":
+                delete_btn.clicked.connect(lambda _, pid=data["product_id"]: self.delete_product(pid))
+            elif delete_btn:
+                delete_btn.hide()
+
+            # Заполняем QLabel текстом
+            labels_data = {
+                "articleLabel": f"Артикул: {data['article']}",
+                "categoryLabel": data["category"],
+                "nameLabel": data["name"],
+                "opisanieLabel": f"Описание товара: {data['opisanie']}",
+                "proizvoditelLabel": f"Производитель: {data['proizvoditel']}",
+                "postavshikLabel": f"Поставщик: {data['postavshik']}",
+                "priceLabel": f"Цена: {data['price']} руб.",
+                "izmerenieLabel": f"Единица измерения: {data['izmerenie']}",
+                "kolvoLabel": f"Количество на складе: {data['kolvo']}",
+                "discountLabel": f"Скидка: {data['skidka']}%"
+            }
+
+            # Установка текста
+            for label_name, text in labels_data.items():
+                label = frame.findChild(QLabel, label_name) # Ищем QLabel по имени
+                if label: # Устанавливаем текст
+                    label.setText(str(text))
+
+                    # жирный шрифт для категории и наименования товара
+                    if label_name in ("categoryLabel", "nameLabel"):
+                        font = label.font()
+                        font.setBold(True)
+                        label.setFont(font)
+
+            # Вставляем фото
+            image_label = frame.findChild(QLabel, "imageLabel")
+            if image_label:
+                photo_name = data["photo"]
+
+                if photo_name and str(photo_name).strip():
+                    image_path = os.path.join("images", photo_name)
+                else:
+                    image_path = os.path.join("images", "picture.png")
+
+                if os.path.exists(image_path):
+                    pixmap = QPixmap(image_path)
+                    image_label.setPixmap(pixmap)
+                    image_label.setScaledContents(True)
+                else:
+                    image_label.setText("Файл не найден")
+
+            # Подсветка карточки в зависимости от скидки или кол-во на складе
+            if data["bg_color"]:
+                frame.setStyleSheet(f"background-color: {data['bg_color']};")
+
+            # Цена со скидкой
+            price_label = frame.findChild(QLabel, "priceLabel") # Получаем QLabel цены
+            final_price_label = frame.findChild(QLabel, "finalPriceLabel") # Получаем QLabel цены со скидкой
+
+            # Зачёркиваем старую цену
+            if data["new_price"] is not None:
+                font = price_label.font()
+                font.setStrikeOut(True)
+                price_label.setFont(font)
+                price_label.setStyleSheet("color: red; border: none;")
+
+                # Выводим новую цену
+                final_price_label.setText(f"{int(data['new_price'])} руб.")
+                final_price_label.setStyleSheet("color: black; border: none;")
+            else: # Если скидки нет — ничего не пишем
+                final_price_label.setText("")
+
+            # Добавляем карточку в список товаров
+            if self.role == "Администратор":
+                self.make_clickable(frame, data["product_id"])
+
+            # Добавляем карточку в список товаров
+            layout.addWidget(frame)
+        # Добавляем отступ внизу списка
+        layout.addStretch()
+
+    # 6) Универсальный метод для поиска, фильтра и сортировки
+    def apply_filters_and_sort(self):
+        poisk_text = self.poiskEdit.text().strip()
+        postavshik = self.postavshikComboBox.currentText()
+        sort_choice = self.sortComboBox.currentText()
+
+        order = None
+        if sort_choice == "По возрастанию кол-ва на складе":
+            order = "ASC"
+        elif sort_choice == "По убыванию кол-ва на складе":
+            order = "DESC"
+
+        products = get_products_filtered(
+            poisk_text=poisk_text,
+            postavshik=postavshik if postavshik != "Все поставщики" else "",
+            order=order
+        )
+
+        self.show_products(products)
+
+    # 7) Заполнение комбо-бокса поставщиками
+    def load_postavshiki(self):
+        self.postavshikComboBox.clear()
+        self.postavshikComboBox.addItem("Все поставщики")
+
+        postavshiki = get_postavshiki()
+        for postavshik in postavshiki:
+            self.postavshikComboBox.addItem(postavshik[0])
+
+    # 8) Открытие окна для добавления товара
+    def open_add_product_window(self):
+        if self.edit_window:
+            return
+        self.edit_window = EditProductWindow(self, product_id=None)
+        self.edit_window.finished.connect(self.on_edit_window_closed)
+        self.edit_window.show()
+
+    # 9) Открытие окна для редактирования товара
+    def open_edit_product_window(self, product_id):
+        if self.edit_window:
+            return
+        self.edit_window = EditProductWindow(self, product_id=product_id)
+        self.edit_window.finished.connect(self.on_edit_window_closed)
+        self.edit_window.show()
+
+    # 10) Закрытие окна редактирования
+    def on_edit_window_closed(self):
+        self.edit_window = None
+        self.load_products()  # обновляем список товаров
+
+    # 11) Удаление товара
+    def delete_product(self, product_id):
+        from db import delete_product, product_in_orders, get_product_photo
+        import os
+
+        # Проверка: есть ли товар в заказах
+        if product_in_orders(product_id):
+            QMessageBox.warning(
+                self,
+                "Запрещено удаление",
+                "Данный товар используется в заказах.\nСначала удалите его из заказов."
+            )
+            return
+
+        # Подтверждение удаления
+        reply = QMessageBox.question(self, "Подтверждение", "Вы уверены, что хотите удалить товар?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+
+        if reply != QMessageBox.StandardButton.Yes:
+            return
+
+        # Получаем имя файла картинки
+        photo_name = get_product_photo(product_id)
+
+        # Если фото есть и это НЕ заглушка
+        if photo_name and photo_name != "picture.png":
+            image_path = os.path.join("images", photo_name)
+
+            if os.path.exists(image_path):
+                os.remove(image_path)
+
+        try:
+            # Удаляем товар из БД
+            delete_product(product_id)
+            # Обновляем список товаров
+            self.load_products()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Ошибка удаления",
+                f"Не удалось удалить товар.\nОшибка: {str(e)}"
+            )
+
+    def open_orders_window(self):
+        """Открывает окно со списком заказов"""
+        self.orders_window = OrdersWindow(self.fioLabel.text(), self.role)
+        self.orders_window.show()
+        self.close()
