@@ -1,3 +1,4 @@
+
 PYTHON 3.12
 DROP DATABASE IF EXISTS shop_shoes;
 CREATE DATABASE shop_shoes;
